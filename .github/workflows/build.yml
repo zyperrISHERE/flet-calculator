@@ -19,22 +19,31 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Flet build tools
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install "flet[all]"
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Create pyproject.toml
+      - name: Accept Android SDK licenses
+        shell: bash
         run: |
-          cat > pyproject.toml <<'EOF'
-          [project]
-          name = "flet-calculator"
-          version = "1.0.0"
-          requires-python = ">=3.12,<3.13"
-          dependencies = ["flet"]
+          if [ -x "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | "${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager" --licenses
+          else
+            yes | sdkmanager --licenses
+          fi
 
-          [tool.flet]
+      - name: Build APK
+        run: |
+          flet build apk --verbose
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flet-calculator-apk
+          path: build/apk/**/*.apk
+          if-no-files-found: error          [tool.flet]
           org = "com.zyperr"
           product = "Flet Calculator"
 
