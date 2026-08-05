@@ -1,15 +1,22 @@
-[project]
-name = "flet-calculator"
-version = "1.0.0"
-description = "Calculator built with Flet"
-readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "flet"
-]
+      - name: Create pyproject.toml
+        run: |
+          cat > pyproject.toml <<EOF
+          [project]
+          name = "flet-calculator"
+          version = "1.0.0"
+          description = "Calculator"
+          requires-python = ">=3.12,<3.13"
+          dependencies = [
+            "flet"
+          ]
 
-[tool.flet]
-org = "com.zyperr"
+          [tool.flet]
+          org = "com.zyperr"
+          product = "Calculator"
 
-[tool.flet.app]
-path = "."
+          [tool.flet.app]
+          path = "."
+
+          [tool.flet.android]
+          split_per_abi = false
+          EOF
